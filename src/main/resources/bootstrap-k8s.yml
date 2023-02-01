@@ -1,0 +1,8 @@
+server:
+   port: 8097
+
+spring:
+   cloud:
+      config:
+         uri: http://config-server.arq:8888
+         fail-fast: true

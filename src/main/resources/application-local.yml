@@ -1,0 +1,21 @@
+
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://keycloak-des.sistemafiergs.com.br/auth/realms/FIERGS
+
+  datasource:
+#    url: jdbc:h2:mem:testdb
+#    username: sa
+#    password:
+    username: dda_apims
+    password: intr0d7gos
+    driver-class-name: oracle.jdbc.OracleDriver
+#    // url: jdbc:oracle:thin:@//srvdes.sistemafiergs.org.br:1521/dbdes
+    url: jdbc:oracle:thin:@//srvdes.sistemafiergs.org.br:1521/dbdes.srvdes.sistemafiergs.org.br
+
+  jpa:
+    database-platform: org.hibernate.dialect.Oracle10gDialect
