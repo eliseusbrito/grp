@@ -1,21 +1,53 @@
 package br.org.fiergs.grp.entity;
 
 import javax.persistence.*;
-import java.io.Serializable;
 
+//@Embeddable
+//@Table(name = "GRP_REUNIAO_DIRETOR_LIST")
 public class Presenca {
+/*
+    @Column(name = "PRESENTE")
+    private Boolean presente;
 
+    @Column(name = "FOTO")
+    @Lob
+    private byte[] foto;
 
-    @Entity
-    @Table(name="GRP_PRESENCA")
-    public class Diretor implements Serializable {
-        private static final long serialVersionUID = 1L;
+    @Column(name = "DETALHAMENTO")
+    private String detalhamento;
 
-        @Id
-        @SequenceGenerator(name = "GRP_DIRETOR_GENERATOR", sequenceName = "GRP_DIRETOR_SEQ", allocationSize = 1)
-        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GRP_DIRETOR_GENERATOR")
-        @Column(name = "ID")
-        private Long id;
-
+    public Presenca() {
     }
+
+    public Presenca(Boolean presente, byte[] foto, String detalhamento) {
+        this.presente = presente;
+        this.foto = foto;
+        this.detalhamento = detalhamento;
+    }
+
+    public Boolean getPresente() {
+        return presente;
+    }
+
+    public void setPresente(Boolean presente) {
+        this.presente = presente;
+    }
+
+    public byte[] getFoto() {
+        return foto;
+    }
+
+    public void setFoto(byte[] foto) {
+        this.foto = foto;
+    }
+
+    public String getDetalhamento() {
+        return detalhamento;
+    }
+
+    public void setDetalhamento(String detalhamento) {
+        this.detalhamento = detalhamento;
+    }
+*/
+
 }

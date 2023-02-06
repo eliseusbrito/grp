@@ -5,6 +5,7 @@ import br.org.fiergs.grp.entity.Diretor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.util.Optional;
 
 public class DestinatarioRequestDTO {
 
@@ -17,20 +18,20 @@ public class DestinatarioRequestDTO {
     private String telefone;
 
     @NotBlank(message = "destinatario.diretor.required")
-    private Diretor diretor;
+    private Long idDiretor;
 
-    public Destinatario transformaParaObjeto(){
-        return new Destinatario(nome, email, telefone, diretor);
+    public Destinatario transformaParaObjeto(DestinatarioRequestDTO destinatarioRequestDTO, Optional<Diretor> diretor){
+        return new Destinatario(nome, email, telefone, diretor.orElseThrow());
     }
 
     public DestinatarioRequestDTO() {
     }
 
-    public DestinatarioRequestDTO(String nome, String email, String telefone, Diretor diretor) {
+    public DestinatarioRequestDTO(String nome, String email, String telefone, Long idDiretor) {
         this.nome = nome;
         this.email = email;
         this.telefone = telefone;
-        this.diretor = diretor;
+        this.idDiretor = idDiretor;
     }
 
     public String getNome() {
@@ -45,8 +46,8 @@ public class DestinatarioRequestDTO {
         return telefone;
     }
 
-    public Diretor getDiretor() {
-        return diretor;
+    public Long getIdDiretor() {
+        return idDiretor;
     }
 
 }

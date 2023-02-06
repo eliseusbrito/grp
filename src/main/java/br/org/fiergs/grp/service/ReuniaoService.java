@@ -4,6 +4,7 @@ import br.org.fiergs.grp.dto.DiretorRequestDTO;
 import br.org.fiergs.grp.dto.ReuniaoRequestDTO;
 import br.org.fiergs.grp.dto.ReuniaoResponseDTO;
 import br.org.fiergs.grp.entity.Diretor;
+import br.org.fiergs.grp.entity.DiretoresReunioes;
 import br.org.fiergs.grp.entity.Logs;
 import br.org.fiergs.grp.entity.Reuniao;
 import br.org.fiergs.grp.mapper.ReuniaoMapper;
@@ -21,17 +22,25 @@ public class ReuniaoService {
 
     public ReuniaoMapper reuniaoMapper;
 
+    DiretoresReunioesService diretoresReunioesService;
+
     LogsService logsService;
 
-    public ReuniaoService(ReuniaoRepository repository, ReuniaoMapper reuniaoMapper, LogsService logsService) {
+    public ReuniaoService(ReuniaoRepository repository, ReuniaoMapper reuniaoMapper, DiretoresReunioesService diretoresReunioesService, LogsService logsService) {
         this.repository = repository;
         this.reuniaoMapper = reuniaoMapper;
+        this.diretoresReunioesService = diretoresReunioesService;
         this.logsService = logsService;
     }
 
     public Reuniao addReuniao(ReuniaoRequestDTO reuniaoRequestDTO) {
         Reuniao reuniao = new Reuniao();
         repository.save(reuniaoMapper.toModel(reuniao, reuniaoRequestDTO));
+        if (reuniaoRequestDTO.getDiretorList().size() >= 0) {
+            for(int i =0; i<= reuniaoRequestDTO.getDiretorList().size(); i++){
+                diretoresReunioesService.addConvites(reuniaoRequestDTO.getDiretorList().get(i).getId(), reuniao.getId());
+            }
+        }
         String tipo = "CadastroReuniao";
         String tabela = "GRP_REUNIAO";
         String detalhamento = null;
@@ -61,7 +70,7 @@ public class ReuniaoService {
         reuniao.setLocal(reuniaoRequestDTO.getLocal());
         reuniao.setTipoReuniao(reuniaoRequestDTO.getTipoReuniao());
         reuniao.setStatus(reuniaoRequestDTO.getStatus());
-        reuniao.setDiretorList(reuniaoRequestDTO.getDiretorList());
+//        reuniao.setDiretorList(reuniaoRequestDTO.getDiretorList());
 
         String tipo = "UpdateReuniao";
         String tabela = "GRP_REUNIAO";

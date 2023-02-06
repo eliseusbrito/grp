@@ -11,6 +11,13 @@ targetCompatibility = JavaVersion.VERSION_11
 
 repositories {
 	maven { url 'https://srvnexus.sistemafiergs.com.br/repository/maven-public/' }
+	mavenCentral()
+	maven {
+		url "https://repo.spring.io/release"
+	}
+	maven {
+		url "https://repository.jboss.org/maven2"
+	}
 }
 
 springBoot {

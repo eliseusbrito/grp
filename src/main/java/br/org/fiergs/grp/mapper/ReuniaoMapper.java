@@ -14,7 +14,7 @@ public class ReuniaoMapper {
         reuniao.setLocal(reuniaoRequestDTO.getLocal());
         reuniao.setTipoReuniao(reuniaoRequestDTO.getTipoReuniao());
         reuniao.setStatus(reuniaoRequestDTO.getStatus());
-        reuniao.setDiretorList(reuniaoRequestDTO.getDiretorList());
+//        reuniao.setDiretorList(reuniaoRequestDTO.getDiretorList());
         return reuniao;
     }
 
@@ -24,7 +24,7 @@ public class ReuniaoMapper {
         reuniaoResponseDTO.setLocal(reuniao.getLocal());
         reuniaoResponseDTO.setTipoReuniao(reuniao.getTipoReuniao());
         reuniaoResponseDTO.setStatus(reuniao.getStatus());
-        reuniaoResponseDTO.setDiretorList(reuniao.getDiretorList());
+//        reuniaoResponseDTO.setDiretorList(reuniao.getDiretorList());
         return reuniaoResponseDTO;
     }
 

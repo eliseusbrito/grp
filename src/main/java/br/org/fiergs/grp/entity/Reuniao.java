@@ -30,22 +30,21 @@ public class Reuniao implements Serializable {
 
     @Column(name="STATUS")
     private String status;
-
+/*
     @ManyToMany
     @JoinColumn(name="id")
     @Column(name="LISTA_DIRETOR")
     private List<Diretor> diretorList;
-
+*/
     public Reuniao() {
     }
 
-    public Reuniao(String assunto, LocalDateTime fullDate, String local, String tipoReuniao, String status, List<Diretor> diretorList) {
+    public Reuniao(String assunto, LocalDateTime fullDate, String local, String tipoReuniao, String status) {
         this.assunto = assunto;
         this.fullDate = fullDate;
         this.local = local;
         this.tipoReuniao = tipoReuniao;
         this.status = status;
-        this.diretorList = diretorList;
     }
 
     public Long getId() {
@@ -72,9 +71,6 @@ public class Reuniao implements Serializable {
         return status;
     }
 
-    public List<Diretor> getDiretorList() {
-        return diretorList;
-    }
 
     public void setId(Long id) {
         this.id = id;
@@ -100,7 +96,4 @@ public class Reuniao implements Serializable {
         this.status = status;
     }
 
-    public void setDiretorList(List<Diretor> diretorList) {
-        this.diretorList = diretorList;
-    }
 }

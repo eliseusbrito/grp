@@ -3,6 +3,7 @@ package br.org.fiergs.grp.service;
 import br.org.fiergs.grp.dto.DestinatarioRequestDTO;
 import br.org.fiergs.grp.dto.DestinatarioResponseDTO;
 import br.org.fiergs.grp.entity.Destinatario;
+import br.org.fiergs.grp.entity.Diretor;
 import br.org.fiergs.grp.entity.Logs;
 import br.org.fiergs.grp.exceptions.ResourceNotFoundException;
 import br.org.fiergs.grp.repository.DestinatarioRepository;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DestinatarioService {
@@ -19,13 +21,17 @@ public class DestinatarioService {
 
     LogsService logsService;
 
-    public DestinatarioService(DestinatarioRepository repository, LogsService logsService) {
+    DiretorService diretorService;
+
+    public DestinatarioService(DestinatarioRepository repository, LogsService logsService, DiretorService diretorService) {
         this.repository = repository;
         this.logsService = logsService;
+        this.diretorService = diretorService;
     }
 
     public Destinatario addDestinatario(DestinatarioRequestDTO destinatarioRequestDTO) {
-        return repository.save(destinatarioRequestDTO.transformaParaObjeto());
+        Optional<Diretor> diretor = diretorService.findDiretorById(destinatarioRequestDTO.getIdDiretor());
+        return repository.save(destinatarioRequestDTO.transformaParaObjeto(destinatarioRequestDTO, diretor));
     }
 
     public List<DestinatarioResponseDTO> findAll() {
