@@ -1,0 +1,71 @@
+Favor construir uma classe em java que gere um arquivo pdf com uma tabela que conste o nome, presenca e foto em jpg que sera retornado de uma pesquisa no banco de dados. A foto deve estar dentro da tabela vindo de uma base64 e transformado para jpg.
+
+
+import com.itextpdf.text.Document;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.codec.Base64;
+import com.itextpdf.text.pdf.PdfWriter;
+import java.io.FileOutputStream;
+import java.sql.*;
+
+public class GeradorPDF {
+
+    public void gerarPDF() {
+        try {
+            // criação do documento
+            Document document = new Document(PageSize.A4.rotate());
+            PdfWriter.getInstance(document, new FileOutputStream("arquivo.pdf"));
+            document.open();
+
+            // criação da tabela
+            PdfPTable table = new PdfPTable(3);
+            table.setWidthPercentage(100);
+
+            // cabeçalho da tabela
+            PdfPCell cell = new PdfPCell(new Paragraph("Relatório de Presença"));
+            cell.setColspan(3);
+            table.addCell(cell);
+
+            // dados da tabela
+            table.addCell("Nome");
+            table.addCell("Presença");
+            table.addCell("Foto");
+
+            // conexão com o banco de dados
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/nomeDoBancoDeDados", "usuario", "senha");
+
+            // consulta ao banco de dados
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT nome, presenca, foto FROM tabela");
+
+            // preenchimento da tabela
+            while (resultSet.next()) {
+                table.addCell(resultSet.getString("nome"));
+                table.addCell(resultSet.getString("presenca"));
+
+                // transformação da imagem de Base64 para JPG
+                String base64 = resultSet.getString("foto");
+                byte[] decodedBytes = Base64.decode(base64);
+                Image image = Image.getInstance(decodedBytes);
+                PdfPCell imageCell = new PdfPCell(image, true);
+                table.addCell(imageCell);
+            }
+
+            // adição da tabela ao documento
+            document.add(table);
+
+            // fechamento do documento
+            document.close();
+
+            System.out.println("Arquivo PDF gerado com sucesso!");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+

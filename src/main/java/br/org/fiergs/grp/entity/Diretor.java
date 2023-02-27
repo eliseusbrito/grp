@@ -39,12 +39,15 @@ public class Diretor implements Serializable {
 
     @Column(name="FOTO")
     @Lob
-    private byte[] foto;
+    private String foto;
 
     @JsonIgnore
-    @OneToMany(mappedBy= "diretor")
-//    @Column(name="LISTA_DESTINATARIO")
+    @OneToMany(mappedBy = "diretor")
     private List<Destinatario> destinatarioList = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "diretor")
+    private List<Presenca> presencaList = new ArrayList<>();
 
     @Column(name="DATA_INICIO_VIGENCIA")
     private LocalDateTime validDateStart; // ValidDateStart=20151022%20093811
@@ -56,7 +59,7 @@ public class Diretor implements Serializable {
     public Diretor() {
     }
 
-    public Diretor(String nome, String email, String telefone, String funcao, String situacao, String organizacao, byte[] foto, List<Destinatario> destinatarioList, LocalDateTime validDateStart, LocalDateTime validDateEnd) {
+    public Diretor(String nome, String email, String telefone, String funcao, String situacao, String organizacao, String foto, List<Destinatario> destinatarioList, LocalDateTime validDateStart, LocalDateTime validDateEnd) {
         this.nome = nome;
         this.email = email;
         this.telefone = telefone;
@@ -125,11 +128,11 @@ public class Diretor implements Serializable {
         this.organizacao = organizacao;
     }
 
-    public byte[] getFoto() {
+    public String getFoto() {
         return foto;
     }
 
-    public void setFoto(byte[] foto) {
+    public void setFoto(String foto) {
         this.foto = foto;
     }
 

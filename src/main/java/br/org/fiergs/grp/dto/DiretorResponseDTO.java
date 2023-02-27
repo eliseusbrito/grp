@@ -21,7 +21,7 @@ public class DiretorResponseDTO {
 
     private String organizacao;
 
-    private byte[] foto;
+    private String foto;
 
     private List<Destinatario> destinatarioList;
 
@@ -36,7 +36,7 @@ public class DiretorResponseDTO {
     public DiretorResponseDTO() {
     }
 
-    public DiretorResponseDTO(String nome, String email, String telefone, String funcao, String situacao, String organizacao, byte[] foto, List<Destinatario> destinatarioList, LocalDateTime validDateStart, LocalDateTime validDateEnd) {
+    public DiretorResponseDTO(String nome, String email, String telefone, String funcao, String situacao, String organizacao, String foto, List<Destinatario> destinatarioList, LocalDateTime validDateStart, LocalDateTime validDateEnd) {
         this.nome = nome;
         this.email = email;
         this.telefone = telefone;
@@ -73,7 +73,7 @@ public class DiretorResponseDTO {
         return organizacao;
     }
 
-    public byte[] getFoto() {
+    public String getFoto() {
         return foto;
     }
 

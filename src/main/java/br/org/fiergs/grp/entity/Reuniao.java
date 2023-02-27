@@ -1,41 +1,44 @@
 package br.org.fiergs.grp.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name="GRP_REUNIAO")
+@Table(name = "GRP_REUNIAO")
 public class Reuniao implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @SequenceGenerator(name="GRP_REUNIAO_GENERATOR", sequenceName="GRP_REUNIAO_SEQ", allocationSize = 1)
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="GRP_REUNIAO_GENERATOR")
-    @Column(name="ID")
+    @SequenceGenerator(name = "GRP_REUNIAO_GENERATOR", sequenceName = "GRP_REUNIAO_SEQ", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GRP_REUNIAO_GENERATOR")
+    @Column(name = "ID")
     private Long id;
 
-    @Column(name="ASSUNTO")
+    @Column(name = "ASSUNTO")
     private String assunto;
 
-    @Column(name="DATA")
+    @Column(name = "DATA")
     private LocalDateTime fullDate;
 
-    @Column(name="LOCAL")
+    @Column(name = "LOCAL")
     private String local;
 
-    @Column(name="TIPO_REUNIAO")
+    @Column(name = "TIPO_REUNIAO")
     private String tipoReuniao;
 
-    @Column(name="STATUS")
+    @Column(name = "STATUS")
     private String status;
-/*
-    @ManyToMany
-    @JoinColumn(name="id")
-    @Column(name="LISTA_DIRETOR")
-    private List<Diretor> diretorList;
-*/
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "reuniao")
+    private List<Presenca> presencaList = new ArrayList<>();
+
+
     public Reuniao() {
     }
 
@@ -71,7 +74,6 @@ public class Reuniao implements Serializable {
         return status;
     }
 
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -95,5 +97,18 @@ public class Reuniao implements Serializable {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    @Override
+    public String toString() {
+        return "Reuniao{" +
+                "id=" + id +
+                ", assunto='" + assunto + '\'' +
+                ", fullDate=" + fullDate +
+                ", local='" + local + '\'' +
+                ", tipoReuniao='" + tipoReuniao + '\'' +
+                ", status='" + status + '\'' +
+                '}';
+    }
+
 
 }

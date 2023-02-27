@@ -1,0 +1,176 @@
+Favor construir uma classe em java que gere um arquivo pdf utilizando o itextpdf 5.5.13 com uma tabela que conste o nome, presenca e foto em jpg que sera retornado de uma pesquisa no banco de dados. A foto deve estar dentro da tabela vindo de uma base64 e transformado para jpg. A tabela deve ter a altura fixa em 20pixels e a foto deve estar contida dentro da celula. Esta classe enviar este pdf dentro de um response para o front end em angular.
+Infelizmente, como um modelo de linguagem, não é possível fornecer um código de solução específico para sua solicitação devido à falta de informações específicas, como a estrutura do banco de dados e outros detalhes específicos de implementação. No entanto, podemos fornecer um esqueleto de classe em Java para ajudá-lo a começar.
+
+Para gerar um arquivo PDF usando iTextPDF, você precisará criar um objeto Document, adicionar um objeto PdfWriter e abrir o documento antes de adicionarmos o conteúdo. Em seguida, crie uma tabela e adicione as células com os dados que foram recuperados do banco de dados.
+
+Para adicionar uma imagem, você precisará criar um objeto Image e adicioná-lo a uma célula da tabela. Para converter uma imagem de base64 para JPG, você precisará usar uma biblioteca Java como Apache Commons Codec ou Java 8's Base64 class.
+
+Finalmente, para enviar o PDF como um response para o front-end em Angular, você precisará definir o tipo de conteúdo e gravar o PDF em um OutputStream que será enviado como um response.
+
+Segue abaixo um esqueleto de classe que você pode adaptar para atender às suas necessidades específicas:
+
+java
+Copy code
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.*;
+import java.io.*;
+import java.sql.*;
+
+public class PDFGenerator {
+
+    public static void main(String[] args) throws Exception {
+        // Criar objeto Document
+        Document document = new Document();
+
+        // Criar objeto PdfWriter
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PdfWriter.getInstance(document, baos);
+
+        // Abrir o documento
+        document.open();
+
+        // Criar tabela
+        PdfPTable table = new PdfPTable(3); // 3 colunas para nome, presença e foto
+        table.setWidthPercentage(100);
+        table.setTotalWidth(new float[]{100, 100, 100}); // largura das colunas em porcentagem
+
+        // Recuperar dados do banco de dados e preencher tabela
+        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/database", "user", "password");
+        PreparedStatement stmt = conn.prepareStatement("SELECT nome, presenca, foto FROM tabela");
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+            // Adicionar célula com nome
+            PdfPCell cellNome = new PdfPCell(new Phrase(rs.getString("nome")));
+            table.addCell(cellNome);
+
+            // Adicionar célula com presença
+            PdfPCell cellPresenca = new PdfPCell(new Phrase(rs.getString("presenca")));
+            table.addCell(cellPresenca);
+
+            // Adicionar célula com foto
+            byte[] fotoBase64 = rs.getString("foto").getBytes(); // recuperar foto em base64 do banco de dados
+            byte[] fotoBytes = Base64.getDecoder().decode(fotoBase64); // converter base64 para bytes
+            Image foto = Image.getInstance(fotoBytes); // criar objeto Image com bytes da foto
+            PdfPCell cellFoto = new PdfPCell(foto, true);
+            table.addCell(cellFoto);
+        }
+        rs.close();
+        stmt.close();
+        conn.close();
+
+        // Adicionar tabela ao documento
+        document.add(table);
+
+        // Fechar o documento
+        document.close();
+
+        // Enviar PDF como response para o front-end em Angular
+        byte[] pdfBytes = baos.toByteArray();
+        OutputStream out = response.getOutputStream();
+        response.setContentType("application/pdf");
+        response.setContentLength(pdfBytes.length);
+        response.setHeader("Content-Disposition", "attachment; filename=\"arquivo.pdf\"");
+        out.write(pdfBytes);
+        out.flush();
+        out.close
+
+
+Regenerate response
+
+
+Outra alternativa enviar pdf:
+
+// configurar a resposta HTTP para enviar um arquivo PDF
+            response.setContentType("application/pdf");
+            response.setHeader("Content-Disposition", "attachment; filename=arquivo.pdf");
+            OutputStream responseOutputStream = response.getOutputStream();
+
+
+Outra alternativa:
+
+import com.itextpdf.text.Document;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.codec.Base64;
+import com.itextpdf.text.pdf.PdfWriter;
+import java.io.OutputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import javax.servlet.http.HttpServletResponse;
+
+public class GerarPDF {
+  
+    // Método para obter a conexão com o banco de dados
+    private Connection getConnection() throws Exception {
+        String url = "jdbc:mysql://localhost:3306/banco_de_dados";
+        String user = "usuario";
+        String password = "senha";
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection conn = DriverManager.getConnection(url, user, password);
+        return conn;
+    }
+  
+    // Método para gerar o PDF e enviar como response para o front-end
+    public void gerarPDF(HttpServletResponse response) throws Exception {
+        
+        // Configurações do PDF
+        Document document = new Document(PageSize.A4);
+        OutputStream out = response.getOutputStream();
+        PdfWriter.getInstance(document, out);
+        document.open();
+        
+        // Criação da tabela
+        PdfPTable table = new PdfPTable(3);
+        table.setWidthPercentage(100);
+        table.setTotalWidth(new float[]{ 100, 50, 50 });
+        table.getDefaultCell().setFixedHeight(20);
+        
+        // Adição das colunas da tabela
+        table.addCell("Nome");
+        table.addCell("Presença");
+        table.addCell("Foto");
+        
+        // Consulta ao banco de dados
+        Connection conn = getConnection();
+        PreparedStatement pstmt = conn.prepareStatement("SELECT nome, presenca, foto FROM tabela");
+        ResultSet rs = pstmt.executeQuery();
+        
+        // Loop para adicionar os dados na tabela
+        while (rs.next()) {
+            
+            // Adição do nome na tabela
+            PdfPCell cellNome = new PdfPCell();
+            cellNome.setPhrase(new com.itextpdf.text.Paragraph(rs.getString("nome")));
+            table.addCell(cellNome);
+            
+            // Adição da presença na tabela
+            PdfPCell cellPresenca = new PdfPCell();
+            cellPresenca.setPhrase(new com.itextpdf.text.Paragraph(rs.getString("presenca")));
+            table.addCell(cellPresenca);
+            
+            // Adição da foto na tabela
+            PdfPCell cellFoto = new PdfPCell();
+            String base64 = rs.getString("foto");
+            byte[] bytes = Base64.decode(base64);
+            com.itextpdf.text.Image foto = com.itextpdf.text.Image.getInstance(bytes);
+            foto.scaleToFit(50, 50);
+            cellFoto.addElement(foto);
+            table.addCell(cellFoto);
+        }
+        
+        // Adição da tabela ao PDF
+        document.add(table);
+        
+        // Fechamento do documento e do response
+        document.close();
+        response.setContentType("application/pdf");
+        response.setHeader("Content-disposition", "attachment;filename=arquivo.pdf");
+        response.flushBuffer();
+    }
+}
+
+
+

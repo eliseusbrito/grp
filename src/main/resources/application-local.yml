@@ -19,3 +19,10 @@ spring:
 
   jpa:
     database-platform: org.hibernate.dialect.Oracle10gDialect
+
+
+intelbras:
+  remoteHost: http://10.100.78.134/cgi-bin
+  username: admin
+  passwordAdmin: ss5530AD
+  password: 123456

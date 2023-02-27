@@ -1,11 +1,31 @@
 package br.org.fiergs.grp.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 //@Embeddable
-//@Table(name = "GRP_REUNIAO_DIRETOR_LIST")
-public class Presenca {
-/*
+@Entity
+@Table(name = "GRP_PRESENCA")
+public class Presenca implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @SequenceGenerator(name="GRP_PRESENCA_GENERATOR", sequenceName="GRP_PRESENCA_SEQ", allocationSize = 1)
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="GRP_PRESENCA_GENERATOR")
+    @Column(name="ID")
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "reuniao_id")
+    private Reuniao reuniao;
+
+    @ManyToOne
+    @JoinColumn(name = "diretor_id")
+    private Diretor diretor;
+
+    @Column(name = "INTENCAO")
+    private String intencao;
+
     @Column(name = "PRESENTE")
     private Boolean presente;
 
@@ -13,16 +33,47 @@ public class Presenca {
     @Lob
     private byte[] foto;
 
-    @Column(name = "DETALHAMENTO")
-    private String detalhamento;
-
     public Presenca() {
     }
 
-    public Presenca(Boolean presente, byte[] foto, String detalhamento) {
+    public Presenca(Reuniao reuniao, Diretor diretor, String intencao, Boolean presente, byte[] foto) {
+        this.reuniao = reuniao;
+        this.diretor = diretor;
+        this.intencao = intencao;
         this.presente = presente;
         this.foto = foto;
-        this.detalhamento = detalhamento;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Reuniao getReuniao() {
+        return reuniao;
+    }
+
+    public void setReuniao(Reuniao reuniao) {
+        this.reuniao = reuniao;
+    }
+
+    public Diretor getDiretor() {
+        return diretor;
+    }
+
+    public void setDiretor(Diretor diretor) {
+        this.diretor = diretor;
+    }
+
+    public String getIntencao() {
+        return intencao;
+    }
+
+    public void setIntencao(String intencao) {
+        this.intencao = intencao;
     }
 
     public Boolean getPresente() {
@@ -40,14 +91,5 @@ public class Presenca {
     public void setFoto(byte[] foto) {
         this.foto = foto;
     }
-
-    public String getDetalhamento() {
-        return detalhamento;
-    }
-
-    public void setDetalhamento(String detalhamento) {
-        this.detalhamento = detalhamento;
-    }
-*/
 
 }

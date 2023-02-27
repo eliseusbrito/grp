@@ -1,0 +1,76 @@
+Segue abaixo um exemplo de implementação em Java utilizando a biblioteca iTextPDF para criar um arquivo PDF com uma tabela contendo informações de nome, presença e foto vinda de uma base64, como solicitado:
+
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Base64;
+import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Image;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.property.UnitValue;
+
+public class PDFGenerator {
+    
+    public void generatePDF(String fileName, String[][] data) throws IOException {
+        
+        // create PDF document
+        PdfDocument pdfDoc = new PdfDocument(new PdfWriter(new FileOutputStream(fileName)));
+        Document doc = new Document(pdfDoc);
+        
+        // create table with fixed height of 20 pixels
+        Table table = new Table(new UnitValue[]{new UnitValue(200), new UnitValue(100), new UnitValue(100)});
+        table.setHeight(new UnitValue(20));
+        
+        // add header row
+        table.addCell("Nome");
+        table.addCell("Presença");
+        table.addCell("Foto");
+        
+        // add data rows
+        for (int i = 0; i < data.length; i++) {
+            // create cell for name
+            Cell nameCell = new Cell();
+            nameCell.add(data[i][0]);
+            table.addCell(nameCell);
+            
+            // create cell for presence
+            Cell presenceCell = new Cell();
+            presenceCell.add(data[i][1]);
+            table.addCell(presenceCell);
+            
+            // create cell for photo
+            Cell photoCell = new Cell();
+            byte[] imageData = Base64.getDecoder().decode(data[i][2]);
+            Image image = new Image(ImageDataFactory.create(imageData));
+            image.setAutoScale(true);
+            photoCell.add(image);
+            table.addCell(photoCell);
+        }
+        
+        // add table to document
+        doc.add(table);
+        
+        // close document
+        doc.close();
+    }
+}
+
+
+Para utilizar a classe acima, basta criar uma instância dela e chamar o método generatePDF passando o nome do arquivo a ser gerado e um array de dados contendo nome, presença e foto em base64:
+
+java
+Copy code
+public static void main(String[] args) throws IOException {
+    PDFGenerator pdfGenerator = new PDFGenerator();
+    String[][] data = {
+        {"Fulano", "Sim", "base64encodedimage"},
+        {"Ciclano", "Não", "base64encodedimage"}
+    };
+    pdfGenerator.generatePDF("arquivo.pdf", data);
+}
+
+

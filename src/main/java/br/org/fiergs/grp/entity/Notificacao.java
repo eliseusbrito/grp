@@ -15,44 +15,28 @@ public class Notificacao implements Serializable {
     @Column(name = "ID")
     private Long id;
 
-    private Reuniao reuniao;
-
+    @Column(name = "TITULO")
     private String titulo;
 
-    @Column(name="DESCRICAO")
+    @Column(name = "DESCRICAO", length = 4000)
     @Lob
-    private byte[] descricao;
+    private String descricao;
 
-    @ManyToMany
-    @JoinColumn(name="id")
-    @Column(name="LISTA_DIRETOR")
-    private List<Diretor> diretorList;
+    @ManyToOne
+    @JoinColumn(name = "reuniao_id")
+    private Reuniao reuniao;
 
     public Notificacao() {
     }
 
-    public Notificacao(Long id, Reuniao reuniao, String titulo, byte[] descricao, List<Diretor> diretorList) {
-        this.id = id;
-        this.reuniao = reuniao;
+    public Notificacao(String titulo, String descricao, Reuniao reuniao) {
         this.titulo = titulo;
         this.descricao = descricao;
-        this.diretorList = diretorList;
+        this.reuniao = reuniao;
     }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Reuniao getReuniao() {
-        return reuniao;
-    }
-
-    public void setReuniao(Reuniao reuniao) {
-        this.reuniao = reuniao;
     }
 
     public String getTitulo() {
@@ -63,20 +47,16 @@ public class Notificacao implements Serializable {
         this.titulo = titulo;
     }
 
-    public byte[] getDescricao() {
+    public String getDescricao() {
         return descricao;
     }
 
-    public void setDescricao(byte[] descricao) {
+    public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
 
-    public List<Diretor> getDiretorList() {
-        return diretorList;
-    }
-
-    public void setDiretorList(List<Diretor> diretorList) {
-        this.diretorList = diretorList;
+    public Reuniao getReuniao() {
+        return reuniao;
     }
 
 }

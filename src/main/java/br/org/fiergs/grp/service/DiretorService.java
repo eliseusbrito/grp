@@ -6,6 +6,7 @@ import br.org.fiergs.grp.entity.Diretor;
 import br.org.fiergs.grp.entity.Logs;
 import br.org.fiergs.grp.repository.DiretorRepository;
 import br.org.fiergs.grp.repository.LogsRepository;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class DiretorService {
 
     LogsService logsService;
 
-    public DiretorService(DiretorRepository repository, IntelbrasService intelbrasService, LogsService logsService) {
+    public DiretorService(DiretorRepository repository, @Lazy IntelbrasService intelbrasService, LogsService logsService) {
         this.repository = repository;
         this.intelbrasService = intelbrasService;
         this.logsService = logsService;

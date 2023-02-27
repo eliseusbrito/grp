@@ -1,17 +1,17 @@
 package br.org.fiergs.grp.controller;
 
+import br.org.fiergs.grp.entity.Face;
 import br.org.fiergs.grp.service.IntelbrasService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import javax.ws.rs.core.Response;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api", produces = "application/json")
 public class IntelbrasController {
-
-//    String remoteHost = "https://jsonplaceholder.typicode.com";
 
     private IntelbrasService service;
 
@@ -19,19 +19,47 @@ public class IntelbrasController {
         this.service = service;
     }
 
-    @GetMapping(path = "/post")
-//    @PreAuthorize("hasRole('GRP_ADM[*]')")
-    public Response obterUsuarioByUserID() {
+    @GetMapping(path = "/getFirmware")
+    //    @PreAuthorize("hasRole('GRP_ADM[*]')")
+    public String getFirmware() {
+        return service.getFirmware();
+    }
 
-        /*
-        Client client = ClientBuilder.newClient();
-        Response response = client.target(remoteHost).path("/posts")
-                .request(MediaType.APPLICATION_JSON)
-                .get();
-        client.close();
-        */
-        Response response = service.obterUsuarioByUserID();
-        return response;
+    @GetMapping(path = "/allUsers")
+//    @PreAuthorize("hasRole('GRP_ADM[*]')")
+    public String obterTodosUsuarios() {
+        return service.obterTodosUsuarios();
+    }
+
+    @GetMapping(path = "/cadastroUsuario/{diretorId}")
+//    @PreAuthorize("hasRole('GRP_ADM[*]')")
+    public String cadastroUsuario(@PathVariable Long diretorId) throws ParseException {
+        return service.cadastroUsuario(diretorId);
+    }
+
+
+    //cadastroFotoUsuario
+    @GetMapping(path = "/cadastroFotoUsuario")
+//    @PreAuthorize("hasRole('GRP_ADM[*]')")
+    public String cadastrarFotoUsuario(@RequestBody List<Face> faceList) throws UnsupportedEncodingException {
+        return service.cadastroFotoUsuario(faceList);
+    }
+
+
+    //obterRegistroAcessos
+    //precisa passar data e ou hora de inicio e fim
+    @GetMapping(path = "/registrosAcesso/{timestampInicio}/{timestampFinal}")
+//    @PreAuthorize("hasRole('GRP_ADM[*]')")
+    public String registrosAcessos(@PathVariable String timestampInicio, @PathVariable String timestampFinal) throws UnsupportedEncodingException {
+        return service.registrosAcesso(timestampInicio, timestampFinal);
+    }
+
+    //imagemRegistroEvento
+    //eventos listados acima
+    @GetMapping(path = "/imagemAcesso/{fileName}")
+//    @PreAuthorize("hasRole('GRP_ADM[*]')")
+    public void imagemAcesso(@RequestParam String fileName) throws IOException {
+        service.imagemAcesso(fileName);
     }
 
 }

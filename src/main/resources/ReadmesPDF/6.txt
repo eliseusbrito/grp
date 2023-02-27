@@ -1,0 +1,138 @@
+Favor construir uma classe em java que gere um arquivo pdf utilizando o itextpdf 5.5.13 com uma tabela que conste o nome, presenca e foto em jpg que sera retornado de uma pesquisa no banco de dados. A foto deve estar dentro da tabela vindo de uma base64 e transformado para jpg. A tabela deve ter a altura fixa em 20pixels e a foto deve estar contida dentro da celula. Esta classe deve dar a opção para o usuario escolher onde salvar o pdf gerado.
+Segue abaixo uma possível implementação da classe em Java que utiliza o iTextPDF 5.5.13 para gerar um arquivo PDF com uma tabela que contém nome, presença e foto em formato JPG, recuperados de uma pesquisa no banco de dados. A tabela terá altura fixa de 20 pixels e a foto será inserida dentro da célula correspondente, a partir de uma base64 convertida para JPG. O usuário poderá escolher o local onde o arquivo PDF será salvo:
+
+java
+Copy code
+import java.io.FileOutputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Base64;
+
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
+
+public class GeradorPDF {
+
+    public void gerarPDF(String caminhoArquivo) {
+
+        Connection conexao = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            // Conectar ao banco de dados
+            Class.forName("com.mysql.jdbc.Driver");
+            conexao = DriverManager.getConnection("jdbc:mysql://localhost/nome_do_banco", "usuario", "senha");
+
+            // Executar consulta no banco de dados para recuperar nome, presença e foto em formato base64
+            stmt = conexao.prepareStatement("SELECT nome, presenca, foto FROM tabela");
+            rs = stmt.executeQuery();
+
+            // Criar documento PDF
+            Document document = new Document(PageSize.A4, 50, 50, 50, 50);
+            PdfWriter.getInstance(document, new FileOutputStream(caminhoArquivo));
+            document.open();
+
+            // Criar tabela para inserir os dados
+            PdfPTable table = new PdfPTable(3);
+            table.setWidthPercentage(100);
+            table.setTotalWidth(new float[]{ 100, 50, 100 });
+            table.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
+
+            // Inserir cabeçalho da tabela
+            PdfPCell cellNome = new PdfPCell(new Paragraph("Nome"));
+            cellNome.setFixedHeight(20);
+            table.addCell(cellNome);
+            PdfPCell cellPresenca = new PdfPCell(new Paragraph("Presença"));
+            cellPresenca.setFixedHeight(20);
+            table.addCell(cellPresenca);
+            PdfPCell cellFoto = new PdfPCell(new Paragraph("Foto"));
+            cellFoto.setFixedHeight(20);
+            table.addCell(cellFoto);
+
+            // Percorrer os resultados da consulta e inserir os dados na tabela
+            while (rs.next()) {
+                PdfPCell cellNomeValor = new PdfPCell(new Paragraph(rs.getString("nome")));
+                cellNomeValor.setFixedHeight(20);
+                table.addCell(cellNomeValor);
+                PdfPCell cellPresencaValor = new PdfPCell(new Paragraph(rs.getString("presenca")));
+                cellPresencaValor.setFixedHeight(20);
+                table.addCell(cellPresencaValor);
+                PdfPCell cellFotoValor = new PdfPCell();
+                cellFotoValor.setFixedHeight(20);
+                String base64 = rs.getString("foto");
+                byte[] imagemBytes = Base64.getDecoder().decode(base64);
+                Image imagem = Image.getInstance(imagemBytes);
+                imagem.scaleToFit(20, 20);
+                cellFotoValor.addElement(imagem);
+                table.addCell(cellFotoValor);
+            }
+
+            // Adicionar tabela ao documento PDF
+            document.add(table);
+
+            // Fechar o documento PDF
+            document.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+       
+
+
+
+031esb@gmail.com
+qual linha do codigo que permite a escolha do diretorio para salvar o pdf gerado?
+A linha de código que permite escolher o diretório para salvar o PDF gerado é a seguinte:
+
+java
+Copy code
+PdfWriter.getInstance(document, new FileOutputStream(caminhoArquivo));
+Nessa linha, o parâmetro caminhoArquivo representa o caminho completo (incluindo o nome do arquivo) onde o PDF será salvo. Esse caminho pode ser definido pelo usuário, por exemplo, utilizando uma caixa de diálogo de seleção de arquivo ou diretório.
+
+Uma possível implementação utilizando a classe JFileChooser do pacote javax.swing para permitir a escolha do diretório seria:
+
+java
+Copy code
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+// ...
+
+public void gerarPDF() {
+
+    // ...
+
+    // Criar caixa de diálogo para escolha do diretório
+    JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setDialogTitle("Salvar PDF");
+    fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+    fileChooser.setAcceptAllFileFilterUsed(false);
+    FileNameExtensionFilter filter = new FileNameExtensionFilter("Arquivos PDF", "pdf");
+    fileChooser.addChoosableFileFilter(filter);
+    int escolha = fileChooser.showSaveDialog(null);
+
+    // Verificar se o usuário escolheu um diretório e clicou em "Salvar"
+    if (escolha == JFileChooser.APPROVE_OPTION) {
+        String caminhoArquivo = fileChooser.getSelectedFile().getAbsolutePath() + "/arquivo.pdf";
+
+        // ...
+
+        PdfWriter.getInstance(document, new FileOutputStream(caminhoArquivo));
+
+        // ...
+
+    }
+}
+Nesse exemplo, a caixa de diálogo permite ao usuário escolher um diretório para salvar o arquivo PDF e adiciona um filtro para mostrar apenas arquivos com extensão "pdf". O caminho completo do arquivo a ser salvo é definido a partir do diretório escolhido pelo usuário e do nome do arquivo (neste caso, "arquivo.pdf").
+
+
+

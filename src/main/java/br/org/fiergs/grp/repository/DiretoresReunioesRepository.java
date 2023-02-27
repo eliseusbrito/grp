@@ -1,7 +1,6 @@
 package br.org.fiergs.grp.repository;
 
 import br.org.fiergs.grp.entity.DiretoresReunioes;
-import br.org.fiergs.grp.entity.Presenca;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
